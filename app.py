@@ -10,7 +10,8 @@ app = Flask(__name__)
 @app.route("/game/<int:gameid>", methods = ["GET"])
 def get_game(gameid):
     data = testdataset.games[gameid]
-    data["lastUpdate"] = int(time())
+    now = int(time())
+    data["lastUpdate"] = now - (now % 30)
     return data
 
 @app.route("/game/<int:gameid>/data", methods = ["GET"])
