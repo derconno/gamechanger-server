@@ -30,4 +30,9 @@ def put_game():
     id = testdataset.get_id_for_gametype(gametype)
     return {"id": id}
 
-# TODO POST /game/<id> impl
+@app.route("/game/<int:gameid>", methods = ["POST"])
+def post_game(gameid):
+    json_data = request.get_json()
+    if not json_data:
+        return 'no json data', 400
+    return '', 200
