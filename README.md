@@ -24,7 +24,7 @@ Das Backend für die GameChanger App.
 
 | Key | Value |
 | --- | --- |
-| Request Data | `{"gametype": GAMETYPE, "Players": [PLAYER1, PLAYER2, ...]}` |
+| Request Data | `{"gametype": GAMETYPE, "players": [PLAYER1, PLAYER2, ...]}` |
 | Response Data | `{"id": ID}` |
 
 ### POST /game/\<id\>

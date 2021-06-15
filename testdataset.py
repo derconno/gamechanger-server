@@ -1,11 +1,8 @@
-import random
-
-# TODO we need more data!
 
 games = {
-    420: {"gametype": "Rommee"},
-    710: {"gametype": "Wizard"},
-    1337: {"gametype": "Wizard"}
+    420: {"gametype": "Rommee", "lastUpdate": 0},
+    710: {"gametype": "Skull King", "lastUpdate": 0},
+    1337: {"gametype": "Skull King", "lastUpdate": 0}
 }
 
 gamedata = {
@@ -51,12 +48,3 @@ gamedata = {
     }
 }
 
-
-def get_id_for_gametype(gametype):
-    if gametype == "Wizard":
-        if random.randint(0, 1):
-            return 710
-        else:
-            return 1337
-    elif gametype == "Rommee":
-        return 420
