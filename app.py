@@ -10,6 +10,8 @@ app = Flask(__name__)
 
 @app.route("/game/<int:gameid>", methods = ["GET"])
 def get_game(gameid):
+    if not gameid in testdataset.gamedata.keys():
+        return 'no such game', 404
     data = testdataset.games[gameid]
     return data
 
