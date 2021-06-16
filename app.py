@@ -3,23 +3,25 @@ from random import randint
 
 from flask import Flask, request
 
-import testdataset
+from .dbconnector import MongoConnector
 
 app = Flask(__name__)
 
+mc = MongoConnector()
 
 @app.route("/game/<int:gameid>", methods = ["GET"])
 def get_game(gameid):
-    if not gameid in testdataset.gamedata.keys():
+    data = mc.get_game(gameid)
+    if data is None:
         return 'no such game', 404
-    data = testdataset.games[gameid]
     return data
 
 @app.route("/game/<int:gameid>/data", methods = ["GET"])
 def get_game_data(gameid):
-    if not gameid in testdataset.gamedata.keys():
+    data = mc.get_gamedata(gameid)
+    if data is None:
         return 'no such game', 404
-    return testdataset.gamedata[gameid]
+    return data
 
 @app.route("/game", methods = ["PUT"])
 def put_game():
@@ -33,9 +35,9 @@ def put_game():
     if not players:
         return 'no players', 400
     id = randint(0, 420)
-    while id in testdataset.games.keys():
+    while id in mc.get_all_gameids():
         id = randint(0, 420)
-    testdataset.games[id] = {"gametype": gametype, "lastUpdate": int(time())}
+    mc.add_new_game(id, gametype, int(time()))
 
     points = {}
     calls = {}
@@ -43,11 +45,7 @@ def put_game():
         points[p] = []
         calls[p] = []
 
-    testdataset.gamedata[id] = {
-        "Points": points,
-        "Calls": calls,
-        "allowUpdates": False
-    }
+    mc.add_gamedata(id, points, calls, False)
     return {"id": id}
 
 @app.route("/game/<int:gameid>", methods = ["POST"])
@@ -61,9 +59,7 @@ def post_game(gameid):
     calls = json_data["Calls"]
     if not calls:
         calls = {}
-    if not gameid in testdataset.gamedata.keys():
+    if mc.get_game(gameid) is None:
         return 'no such game', 404
-    testdataset.games[gameid]["lastUpdate"] = int(time())
-    testdataset.gamedata[gameid]["Points"] = points
-    testdataset.gamedata[gameid]["Calls"] = calls
+    mc.update_gamedata(gameid, points, calls, False)
     return '', 200
